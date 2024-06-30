@@ -51,6 +51,7 @@ class Ringboard(Extension):
             items.append(Result(icon=ICON,
                                 name=i,
                                 compact=True,
+                                highlightable=True,
                                 on_enter=CopyToClipboardAction(i)))
         return items
 

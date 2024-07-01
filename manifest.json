@@ -3,18 +3,28 @@
     "name": "Ringboard",
     "authors": "hedgieinsocks",
     "icon": "edit-paste",
-    "instructions": "Install <b>ringboard</b> from <a href='https://github.com/SUPERCILEX/clipboard-history'>https://github.com/SUPERCILEX/clipboard-history</a><br>Install <b>rapidfuzz</b> via <code>pip install rapidfuzz</code>",
+    "instructions": "Install and configure <a href='https://github.com/SUPERCILEX/clipboard-history'>ringboard</a> and create <code>/usr/local/bin/ringboard</code> symlink",
     "input_debounce": 0.10,
     "triggers": {
         "regular": {
             "keyword": "c",
             "name": "Literal Search",
-            "description": "Look for exact matches in the clipboard history"
+            "description": "Look for exact matches"
         },
         "fuzzy": {
             "keyword": "cf",
             "name": "Fuzzy Search",
-            "description": "Look for fuzzy matches in the clipboard history"
+            "description": "Look for fuzzy matches"
+        }
+    },
+    "preferences": {
+        "threshold": {
+            "type": "number",
+            "name": "Fuzzy Threshold",
+            "description": "Discard the items below this score",
+            "default_value": 40,
+            "min": 0,
+            "max": 99
         }
     }
 }

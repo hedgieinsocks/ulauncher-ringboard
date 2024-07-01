@@ -3,8 +3,7 @@ import subprocess
 
 from ulauncher.api import Extension, Result
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
-
-from rapidfuzz import process, fuzz
+from ulauncher.utils.fuzzy_search import get_score
 
 
 ICON = 'edit-paste'
@@ -35,8 +34,8 @@ class Ringboard(Extension):
             matches = rb_history_list
         else:
             if trigger_id == 'fuzzy':
-                fuzzy_matches = process.extract(input_text, rb_history_list, limit=None, scorer=fuzz.partial_ratio, score_cutoff=50)
-                matches = [i[0] for i in fuzzy_matches]
+                sorted_matches = sorted(rb_history_list, key=lambda fn: get_score(input_text, fn), reverse=True)
+                matches = list(filter(lambda fn: get_score(input_text, fn) > self.preferences['threshold'], sorted_matches))
             else:
                 matches = [i for i in rb_history_list if input_text.lower() in i.lower()]
 
@@ -47,7 +46,7 @@ class Ringboard(Extension):
                            on_enter=True)]
 
         items = []
-        for i in matches:
+        for i in matches[:25]:
             items.append(Result(icon=ICON,
                                 name=i,
                                 compact=True,

@@ -30,6 +30,8 @@ class Ringboard(Extension):
         rb_history_list = [i['data'].strip() for i in rb_history if i['kind'] == 'Human']
         rb_history_list.reverse()
 
+        input_text = input_text.strip()
+
         if not input_text:
             matches = rb_history_list
         else:
@@ -48,7 +50,7 @@ class Ringboard(Extension):
         items = []
         for i in matches[:25]:
             items.append(Result(icon=ICON,
-                                name=i,
+                                name=i.replace('\n', ' '),
                                 compact=True,
                                 highlightable=True,
                                 on_enter=CopyToClipboardAction(i)))

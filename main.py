@@ -27,6 +27,7 @@ class Ringboard(Extension):
                                on_enter=True)]
             self.rb_history = [i['data'].strip() for i in json.loads(output) if i['kind'] == 'Human']
             self.rb_history.reverse()
+            del self.rb_history[self.preferences['scope']:]
             matches = self.rb_history
         else:
             if trigger_id == 'fuzzy':

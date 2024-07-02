@@ -25,6 +25,14 @@
             "min": 0,
             "max": 99
         },
+        "scope": {
+            "type": "number",
+            "name": "Max Items",
+            "description": "Limit the search scope to N last items",
+            "default_value": 500,
+            "min": 100,
+            "max": 10000
+        },
         "highlight": {
             "type": "checkbox",
             "name": "Highlight Matches",

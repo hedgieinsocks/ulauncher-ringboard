@@ -10,41 +10,35 @@ ICON = 'edit-paste'
 
 
 class Ringboard(Extension):
+    def __init__(self):
+        super().__init__()
+        self.rb_history = []
 
     def on_input(self, input_text, trigger_id):
-        try:
-            output = subprocess.check_output(['ringboard', 'dev', 'dump'], text=True)
-        except Exception as err:
-            return [Result(icon=ICON,
-                           name='Hmm, something went wrong',
-                           description=str(err),
-                           on_enter=True)]
+        query = input_text.lower().strip()
 
-        rb_history = json.loads(output)
-        if not rb_history:
-            return [Result(icon=ICON,
-                           name='Ringboard history is empty',
-                           description='Try to first copy a few strings',
-                           on_enter=True)]
-
-        rb_history_list = [i['data'].strip() for i in rb_history if i['kind'] == 'Human']
-        rb_history_list.reverse()
-
-        input_text = input_text.strip()
-
-        if not input_text:
-            matches = rb_history_list
+        if not query:
+            try:
+                output = subprocess.check_output(['ringboard', 'dev', 'dump'], text=True)
+            except Exception as err:
+                return [Result(icon=ICON,
+                               name='Something went wrong',
+                               description=str(err),
+                               on_enter=True)]
+            self.rb_history = [i['data'].strip() for i in json.loads(output) if i['kind'] == 'Human']
+            self.rb_history.reverse()
+            matches = self.rb_history
         else:
             if trigger_id == 'fuzzy':
-                sorted_matches = sorted(rb_history_list, key=lambda fn: get_score(input_text, fn), reverse=True)
-                matches = list(filter(lambda fn: get_score(input_text, fn) > self.preferences['threshold'], sorted_matches))
+                fuzzy_scores = sorted(self.rb_history, key=lambda fn: get_score(query, fn), reverse=True)
+                matches = list(filter(lambda fn: get_score(query, fn) > self.preferences['threshold'], fuzzy_scores))
             else:
-                matches = [i for i in rb_history_list if input_text.lower() in i.lower()]
+                matches = [i for i in self.rb_history if query in i.lower()]
 
         if not matches:
             return [Result(icon=ICON,
                            name='No matches found',
-                           description='Try to change the search request',
+                           description='Try to change the search pattern',
                            on_enter=True)]
 
         items = []
@@ -52,7 +46,7 @@ class Ringboard(Extension):
             items.append(Result(icon=ICON,
                                 name=i.replace('\n', ' '),
                                 compact=True,
-                                highlightable=True,
+                                highlightable=self.preferences['highlight'],
                                 on_enter=CopyToClipboardAction(i)))
         return items
 

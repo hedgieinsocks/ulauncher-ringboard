@@ -3,8 +3,7 @@
     "name": "Ringboard",
     "authors": "hedgieinsocks",
     "icon": "edit-paste",
-    "instructions": "Install and configure <a href='https://github.com/SUPERCILEX/clipboard-history'>ringboard</a> and create <code>/usr/local/bin/ringboard</code> symlink",
-    "input_debounce": 0.10,
+    "instructions": "Install and configure <a href='https://github.com/SUPERCILEX/clipboard-history'>ringboard</a> so it is available system-wide",
     "triggers": {
         "regular": {
             "keyword": "c",
@@ -25,6 +24,12 @@
             "default_value": 40,
             "min": 0,
             "max": 99
+        },
+        "highlight": {
+            "type": "checkbox",
+            "name": "Highlight Matches",
+            "description": "Draws attension to the matched strings",
+            "default_value": true
         }
     }
 }
